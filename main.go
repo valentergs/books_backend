@@ -24,6 +24,7 @@ func main() {
 	// LIVRO URL ====================================
 	router.HandleFunc("/", livroctl.TodosLivros(db)).Methods("GET")
 	router.HandleFunc("/{id}", livroctl.LivroUnico(db)).Methods("GET")
+	router.HandleFunc("/inserir", livroctl.LivroInserir(db)).Methods("POST")
 	router.HandleFunc("/deletar/{id}", livroctl.LivroApagar(db)).Methods("DELETE")
 	router.HandleFunc("/editar/{id}", livroctl.LivroEditar(db)).Methods("PUT")
 

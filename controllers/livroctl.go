@@ -101,6 +101,42 @@ func (c ControllerLivro) LivroUnico(db *sql.DB) http.HandlerFunc {
 
 }
 
+//LivroInserir será exportado ===========================================
+func (c ControllerLivro) LivroInserir(db *sql.DB) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		var erro models.Error
+		var livro models.Livro
+
+		if r.Method != "POST" {
+			// http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+			erro.Message = "Método não permitido"
+			utils.RespondWithError(w, http.StatusMethodNotAllowed, erro)
+			return
+		}
+
+		json.NewDecoder(r.Body).Decode(&livro)
+
+		expressaoSQL := `INSERT INTO livros (titulo, titulo_original, autor, tradutor, isbn, cdd, cdu, ano, tema, editora, paginas, idioma, formato, dono) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);`
+		_, err := db.Exec(expressaoSQL, livro.Titulo, livro.TituloOriginal, livro.Autor, livro.Tradutor, livro.Isbn, livro.Cdd, livro.Cdu, livro.Ano, livro.Tema, livro.Editora, livro.Paginas, livro.Idioma, livro.Formato, livro.Dono)
+		if err != nil {
+			panic(err)
+		}
+
+		row := db.QueryRow("SELECT * FROM livros WHERE isbn=$1;", livro.Isbn)
+		err = row.Scan(&livro.ID, &livro.Titulo, &livro.TituloOriginal, &livro.Autor, &livro.Tradutor, &livro.Isbn, &livro.Cdd, &livro.Cdu, &livro.Ano, &livro.Tema, &livro.Editora, &livro.Paginas, &livro.Idioma, &livro.Formato, &livro.Dono)
+		if err != nil {
+			panic(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+
+		utils.ResponseJSON(w, livro)
+
+	}
+}
+
 //LivroApagar será exportado =========================================
 func (c ControllerLivro) LivroApagar(db *sql.DB) http.HandlerFunc {
 
@@ -158,7 +194,7 @@ func (c ControllerLivro) LivroEditar(db *sql.DB) http.HandlerFunc {
 			panic(err)
 		}
 
-		row := db.QueryRow("select * from livros where livro_id=$1;", livro.ID)
+		row := db.QueryRow("SELECT * FROM livros WHERE livro_id=$1;", livro.ID)
 		err = row.Scan(&livro.ID, &livro.Titulo, &livro.TituloOriginal, &livro.Autor, &livro.Tradutor, &livro.Isbn, &livro.Cdd, &livro.Cdu, &livro.Ano, &livro.Tema, &livro.Editora, &livro.Paginas, &livro.Idioma, &livro.Formato, &livro.Dono)
 
 		w.Header().Set("Content-Type", "application/json")
