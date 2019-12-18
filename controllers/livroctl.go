@@ -29,7 +29,7 @@ func (c ControllerLivro) TodosLivros(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		rows, err := db.Query("SELECT * FROM livros;")
+		rows, err := db.Query("SELECT * FROM livros ORDER BY livro_id DESC;")
 		if err != nil {
 			http.Error(w, http.StatusText(500), 500)
 			return

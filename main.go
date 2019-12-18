@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 
 	"github.com/valentergs/books_backend/controllers"
 	"github.com/valentergs/books_backend/driver"
@@ -28,6 +29,21 @@ func main() {
 	router.HandleFunc("/deletar/{id}", livroctl.LivroApagar(db)).Methods("DELETE")
 	router.HandleFunc("/editar/{id}", livroctl.LivroEditar(db)).Methods("PUT")
 
+	// CORS ==========================================================
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:8080"},
+		AllowCredentials: true,
+		// Enable Debugging for testing, consider disabling in production
+		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut, http.MethodOptions},
+		AllowedHeaders: []string{"Authorization", "Content-Type"},
+		Debug:          true,
+	})
+
+	// Insert the middleware
+	handler := c.Handler(router)
+
 	log.Println("Listen on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// Quando  usar o CORS colocar "handler" no lugar do "router"
+	// Quando usar ROUTER usar "router"
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
