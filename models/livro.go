@@ -17,4 +17,5 @@ type Livro struct {
 	Idioma         string `json:"idioma"`
 	Formato        string `json:"formato"`
 	Dono           string `json:"dono"`
+	Photourl       string `json:"photourl"`
 }
