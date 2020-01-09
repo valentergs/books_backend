@@ -24,12 +24,17 @@ func RespondWithError(w http.ResponseWriter, status int, error models.Error) {
 //PhotoLink will be exported ====================================
 func PhotoLink(isbn string) string {
 	c := colly.NewCollector()
-	var link string
+	var nulink string
 	c.OnHTML(".s-image", func(e *colly.HTMLElement) {
-		link = e.Attr("src")
+		link := e.Attr("src")
+		link = link[36:47]
+		nulink = `https://images-na.ssl-images-amazon.com/images/I/` + link + `.jpg`
 	})
 	c.Visit(`https://www.amazon.com.br/s?k=` + isbn) 
 	c.Wait()
-	return link
+	return nulink
 }
+
+
+
 
