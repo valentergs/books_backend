@@ -51,4 +51,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Build files
+main
+
 # End of https://www.gitignore.io/api/go,macos
