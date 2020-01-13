@@ -15,7 +15,8 @@ func ConnectDB() *sql.DB {
 	const (
 		user     = "rodrigovalente"
 		password = "Gustavo2012"
-		host     = "localhost"
+		// Quando rodar em Docker o HOST precisa ter o mesmo nome do container onde roda o Postgresql - nesse caso vai ficar postgres:5432
+		host     = "postgres"
 		port     = 5432
 		dbname   = "livros"
 	)

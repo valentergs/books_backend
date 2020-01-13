@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -33,6 +34,7 @@ func (c ControllerLivro) TodosLivros(db *sql.DB) http.HandlerFunc {
 		rows, err := db.Query("SELECT * FROM livros ORDER BY livro_id DESC;")
 		if err != nil {
 			http.Error(w, http.StatusText(500), 500)
+			fmt.Println(err)
 			return
 		}
 
@@ -44,6 +46,7 @@ func (c ControllerLivro) TodosLivros(db *sql.DB) http.HandlerFunc {
 			err := rows.Scan(&clt.ID, &clt.Titulo, &clt.TituloOriginal, &clt.Autor, &clt.Tradutor, &clt.Isbn, &clt.Cdd, &clt.Cdu, &clt.Ano, &clt.Tema, &clt.Editora, &clt.Paginas, &clt.Idioma, &clt.Formato, &clt.Dono, &clt.Photourl)
 			if err != nil {
 				http.Error(w, http.StatusText(500), 500)
+				fmt.Println(err)
 				return
 			}
 			clts = append(clts, clt)
